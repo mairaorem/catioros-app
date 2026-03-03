@@ -82,6 +82,7 @@ function AdBanner() {
       width:"100%",
       maxWidth:430,
     }}>
+      <div style={{fontSize:9,fontWeight:700,color:"#B0A090",textAlign:"center",letterSpacing:"1px",padding:"6px 0 2px",textTransform:"uppercase"}}>Publicidade</div>
       <ins className="adsbygoogle"
         style={{display:"block"}}
         data-ad-client="ca-pub-8839206023504725"
