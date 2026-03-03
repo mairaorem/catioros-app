@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Analytics } from "@vercel/analytics/react";
 
 const STORAGE_KEY = "cachorro_obediente_v1";
 function loadState() {
@@ -629,6 +630,7 @@ export default function App() {
           </div>
         )}
       </div>
+      <Analytics />
     </>
   );
 }
