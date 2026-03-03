@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Analytics } from "@vercel/analytics/react";
 
 const STORAGE_KEY = "cachorro_obediente_v1";
 function loadState() {
@@ -60,7 +61,7 @@ const CHALLENGES = [
   { id:"basico",  label:"Obediência básica", icon:"⭐" },
 ];
 
-// ── ADSENSE ───────────────────────────────────────────────────────────────────
+// ── ADSENSE ────────────────────────────────────────────────────────────────────
 function AdBanner() {
   const ref = useRef(null);
   useEffect(() => {
@@ -71,7 +72,16 @@ function AdBanner() {
     } catch(e) {}
   }, []);
   return (
-    <div ref={ref} style={{margin:"0 0 20px",borderRadius:12,overflow:"hidden",minHeight:90}}>
+    <div ref={ref} style={{
+      margin:"16px 0",
+      borderRadius:16,
+      overflow:"hidden",
+      background:"white",
+      boxShadow:"0 2px 12px rgba(92,61,46,.08)",
+      minHeight:100,
+      width:"100%",
+      maxWidth:430,
+    }}>
       <ins className="adsbygoogle"
         style={{display:"block"}}
         data-ad-client="ca-pub-8839206023504725"
@@ -82,6 +92,7 @@ function AdBanner() {
   );
 }
 
+// ── STYLES ─────────────────────────────────────────────────────────────────────
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fraunces:ital,wght@0,400;0,700;1,400&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -123,38 +134,47 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);m
 .btnp:disabled{opacity:.4;cursor:not-allowed;}
 
 /* HOME */
-.home{min-height:100vh;padding-bottom:80px;animation:fu .4s ease;}
-.hh{background:linear-gradient(160deg,#5C3D2E 0%,#8B5E3C 100%);padding:24px 24px 72px;position:relative;overflow:hidden;}
-.hh::before{content:'🐾';position:absolute;right:-8px;top:8px;font-size:90px;opacity:.07;transform:rotate(15deg);}
-.hh-logo{height:28px;margin-bottom:16px;opacity:.9;display:block;}
-.aw{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
-.av{width:50px;height:50px;border-radius:50%;border:3px solid rgba(255,255,255,.35);overflow:hidden;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.home{min-height:100vh;padding-bottom:90px;animation:fu .4s ease;}
+
+/* HERO — cartão arredondado separado */
+.hh{
+  background:linear-gradient(150deg,#5C3D2E 0%,#8B5E3C 100%);
+  margin:16px 16px 0;
+  border-radius:24px;
+  padding:20px 20px 20px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 6px 24px rgba(92,61,46,.28);
+}
+.hh::before{content:'🐾';position:absolute;right:-6px;top:4px;font-size:80px;opacity:.07;transform:rotate(15deg);}
+.hh-logo{height:26px;margin-bottom:14px;opacity:.9;display:block;}
+.aw{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.av{width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,255,255,.35);overflow:hidden;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
 .av img{width:100%;height:100%;object-fit:cover;}
-.gr{font-family:'Fraunces',serif;font-size:19px;color:#FFE4CC;}
-.gr strong{color:white;font-size:25px;display:block;}
-.db{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border-radius:50px;padding:5px 12px;color:white;font-size:12px;font-weight:700;margin-top:10px;}
-.pbw{margin-top:12px;background:rgba(255,255,255,.2);border-radius:50px;height:7px;overflow:hidden;}
+.gr{font-family:'Fraunces',serif;font-size:17px;color:#FFE4CC;line-height:1.2;}
+.gr strong{color:white;font-size:22px;display:block;}
+.db{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border-radius:50px;padding:4px 11px;color:white;font-size:11px;font-weight:700;margin-top:8px;}
+.pbw{margin-top:10px;background:rgba(255,255,255,.2);border-radius:50px;height:6px;overflow:hidden;}
 .pbf{height:100%;border-radius:50px;background:linear-gradient(90deg,#FFD54F,#FFAB40);transition:width .6s cubic-bezier(.4,0,.2,1);}
-.pl{color:rgba(255,255,255,.75);font-size:11px;margin-top:5px;}
-.hb{padding:22px;margin-top:-44px;}
-.tc{background:white;border-radius:22px;padding:20px;box-shadow:0 8px 28px rgba(92,61,46,.15);margin-bottom:20px;}
-.tp{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
-.tt{font-family:'Fraunces',serif;font-size:20px;color:var(--bd);margin-bottom:8px;}
-.ti2{color:var(--soft);font-size:13px;line-height:1.6;margin-bottom:14px;}
-.mr{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
-.mc{background:var(--cream);border-radius:50px;padding:5px 10px;font-size:11px;font-weight:700;color:var(--soft);}
-.bts{width:100%;padding:14px;border-radius:50px;border:none;background:linear-gradient(135deg,#8B5E3C,#C8956A);color:white;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:transform .1s;display:flex;align-items:center;justify-content:center;gap:7px;}
-.bts:active{transform:scale(.98);}
-.bts.done{background:linear-gradient(135deg,#4CAF50,#66BB6A);}
+.pl{color:rgba(255,255,255,.7);font-size:10px;margin-top:4px;}
+
+/* BODY */
+.hb{padding:16px;}
+.tc{background:white;border-radius:22px;padding:20px;box-shadow:0 4px 20px rgba(92,61,46,.10);margin-bottom:16px;}
+.tp{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+.tt{font-family:'Fraunces',serif;font-size:19px;color:var(--bd);margin-bottom:7px;}
+.ti2{color:var(--soft);font-size:13px;line-height:1.6;margin-bottom:12px;}
+.mr{display:flex;gap:7px;margin-bottom:0;flex-wrap:wrap;}
+.mc{background:var(--cream);border-radius:50px;padding:4px 10px;font-size:11px;font-weight:700;color:var(--soft);}
 .st{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--soft);margin-bottom:10px;}
 
-/* CARROSSEL COM SETAS */
+/* CARROSSEL */
 .pr-outer{position:relative;margin:0 -4px;}
-.pr-arrow{position:absolute;top:50%;transform:translateY(-55%);width:32px;height:32px;border-radius:50%;background:white;border:2px solid #E8D5C5;box-shadow:0 2px 10px rgba(92,61,46,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;font-weight:900;color:var(--b);z-index:10;transition:all .15s;padding:0;line-height:1;}
-.pr-arrow:hover{background:var(--warm);border-color:var(--bl);transform:translateY(-55%) scale(1.08);}
-.pr-arrow.left{left:-6px;}
-.pr-arrow.right{right:-6px;}
-.pr{display:flex;gap:9px;overflow-x:auto;padding:4px 20px 8px;scrollbar-width:none;scroll-behavior:smooth;}
+.pr-arrow{position:absolute;top:50%;transform:translateY(-55%);width:30px;height:30px;border-radius:50%;background:white;border:2px solid #E8D5C5;box-shadow:0 2px 10px rgba(92,61,46,.18);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;font-weight:900;color:var(--b);z-index:10;transition:all .15s;padding:0;line-height:1;}
+.pr-arrow:hover{background:var(--warm);border-color:var(--bl);}
+.pr-arrow.left{left:-4px;}
+.pr-arrow.right{right:-4px;}
+.pr{display:flex;gap:9px;overflow-x:auto;padding:4px 18px 8px;scrollbar-width:none;scroll-behavior:smooth;}
 .pr::-webkit-scrollbar{display:none;}
 .pc{flex:0 0 auto;background:white;border-radius:14px;padding:12px 14px;box-shadow:0 2px 10px rgba(92,61,46,.08);min-width:105px;cursor:pointer;transition:transform .1s;border:2px solid transparent;}
 .pc:active{transform:scale(.96);}
@@ -162,6 +182,11 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);m
 .pe{font-size:20px;margin-bottom:4px;}
 .pn{font-size:10px;font-weight:800;color:var(--soft);margin-bottom:3px;}
 .pp{font-size:12px;font-weight:800;}
+
+/* BOTÃO TREINAR — abaixo do carrossel */
+.bts{width:100%;padding:14px;border-radius:50px;border:none;background:linear-gradient(135deg,#8B5E3C,#C8956A);color:white;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:transform .1s;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:14px;}
+.bts:active{transform:scale(.98);}
+.bts.done{background:linear-gradient(135deg,#4CAF50,#66BB6A);}
 
 /* DAY DETAIL */
 .dd{min-height:100vh;padding-bottom:100px;animation:fu .3s ease;}
@@ -232,19 +257,29 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);m
 
 /* DIPLOMA */
 .dipw{padding:44px 24px 100px;animation:fu .4s ease;}
-.cert{background:white;border-radius:22px;padding:28px 20px;box-shadow:var(--sh);text-align:center;border:3px solid #FFD54F;position:relative;overflow:hidden;}
+.cert{background:white;border-radius:22px;padding:28px 20px;box-shadow:var(--sh);text-align:center;border:3px solid #FFD54F;position:relative;overflow:hidden;margin-bottom:16px;}
 .cert::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(255,213,79,.1),transparent 60%);pointer-events:none;}
-.cert-logo{width:90px;margin-bottom:4px;opacity:.9;}
-.cmd{font-size:60px;margin-bottom:12px;display:block;}
-.ctl{font-family:'Fraunces',serif;font-size:19px;color:var(--bd);margin-bottom:7px;}
-.cst{color:var(--soft);font-size:13px;line-height:1.6;margin-bottom:14px;}
-.cdn{font-family:'Fraunces',serif;font-style:italic;font-size:28px;color:var(--b);display:block;margin-bottom:7px;}
-.cdt{font-size:11px;color:var(--soft);margin-bottom:18px;}
+.cert-logo{width:80px;margin-bottom:4px;opacity:.9;}
+.cmd{font-size:56px;margin-bottom:10px;display:block;}
+.ctl{font-family:'Fraunces',serif;font-size:18px;color:var(--bd);margin-bottom:6px;}
+.cst{color:var(--soft);font-size:13px;line-height:1.6;margin-bottom:12px;}
+.cdn{font-family:'Fraunces',serif;font-style:italic;font-size:26px;color:var(--b);display:block;margin-bottom:6px;}
+.cdt{font-size:11px;color:var(--soft);margin-bottom:16px;}
 .cbg{display:inline-flex;align-items:center;gap:5px;background:#FFF8E1;border:2px solid #FFD54F;border-radius:50px;padding:7px 16px;font-size:13px;font-weight:700;color:#8B6914;}
-.cert-url{margin-top:12px;font-size:11px;color:var(--bl);font-weight:700;}
-.cav{width:72px;height:72px;border-radius:50%;border:3px solid #FFD54F;overflow:hidden;background:var(--warm);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:32px;}
+.cert-url{margin-top:10px;font-size:11px;color:var(--bl);font-weight:700;}
+.cav{width:68px;height:68px;border-radius:50%;border:3px solid #FFD54F;overflow:hidden;background:var(--warm);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:30px;}
 .cav img{width:100%;height:100%;object-fit:cover;}
-.clk{background:white;border-radius:22px;padding:28px 20px;text-align:center;box-shadow:var(--sh);}
+
+/* LEAD CTA no diploma */
+.lead-card{background:linear-gradient(135deg,#5C3D2E,#8B5E3C);border-radius:22px;padding:24px 20px;text-align:center;color:white;box-shadow:0 6px 24px rgba(92,61,46,.3);}
+.lead-card .icon{font-size:40px;display:block;margin-bottom:10px;}
+.lead-card h3{font-family:'Fraunces',serif;font-size:18px;color:#FFE4CC;margin-bottom:8px;}
+.lead-card p{font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;margin-bottom:16px;}
+.lead-btn{display:block;width:100%;padding:15px;border-radius:50px;border:none;background:#FFD54F;color:#5C3D2E;font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;cursor:pointer;text-decoration:none;transition:transform .1s;}
+.lead-btn:active{transform:scale(.98);}
+.lead-note{font-size:11px;color:rgba(255,255,255,.55);margin-top:10px;}
+
+.clk{background:white;border-radius:22px;padding:28px 20px;text-align:center;box-shadow:var(--sh);margin-bottom:16px;}
 .clki{font-size:52px;display:block;margin-bottom:12px;}
 .clk h3{font-family:'Fraunces',serif;font-size:18px;color:var(--bd);margin-bottom:9px;}
 .clk p{font-size:13px;color:var(--soft);line-height:1.6;margin-bottom:14px;}
@@ -261,6 +296,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);m
 @keyframes fu{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 `;
 
+// ── INSTALL BANNER ─────────────────────────────────────────────────────────────
 function InstallBanner() {
   const [show, setShow] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -321,6 +357,7 @@ function InstallBanner() {
   );
 }
 
+// ── APP ────────────────────────────────────────────────────────────────────────
 export default function App() {
   const saved = loadState();
   const [screen,         setScreen]        = useState(saved ? "main" : "onboard");
@@ -351,7 +388,7 @@ export default function App() {
   const _do = doG(gender);
   const _a  = aG(gender);
 
-  const scrollCarousel = dir => carouselRef.current?.scrollBy({left: dir * 140, behavior:'smooth'});
+  const scrollCarousel = dir => carouselRef.current?.scrollBy({left: dir*140, behavior:'smooth'});
   const toggleCh   = id => setChallenges(p => p.includes(id) ? p.filter(c=>c!==id) : [...p,id]);
   const openDay    = d  => { setViewingDay(d); setCompletedSteps(new Set()); setScreen("day"); };
   const toggleStep = i  => setCompletedSteps(p => { const n=new Set(p); n.has(i)?n.delete(i):n.add(i); return n; });
@@ -374,7 +411,7 @@ export default function App() {
     setChallenges([]); setCurrentDay(1); setCompletedDays(new Set()); setDogPhoto(null);
   };
 
-  const Av = ({sz=50}) => (
+  const Av = ({sz=46}) => (
     <div className="av" style={{width:sz,height:sz,fontSize:sz*.46}}>
       {dogPhoto ? <img src={dogPhoto} alt={dogName}/> : "🐶"}
     </div>
@@ -389,6 +426,7 @@ export default function App() {
       <div className="app">
         <InstallBanner/>
 
+        {/* ── ONBOARDING ── */}
         {screen === "onboard" && (
           <div className="ob">
             <div className="ob-hd">
@@ -425,14 +463,16 @@ export default function App() {
           </div>
         )}
 
+        {/* ── MAIN ── */}
         {screen === "main" && (
           <>
             {nav === "home" && (
               <div className="home">
+                {/* HERO — cartão arredondado separado */}
                 <div className="hh">
                   <img src="/logo.png" className="hh-logo" alt="Catioros"/>
                   <div className="aw">
-                    <Av sz={50}/>
+                    <Av sz={46}/>
                     <div>
                       <div className="gr">Hora do treino {_do}</div>
                       <div className="gr"><strong>{dogName} {today.icon}</strong></div>
@@ -442,6 +482,8 @@ export default function App() {
                   <div className="pbw"><div className="pbf" style={{width:`${(progress/30)*100}%`}}/></div>
                   <div className="pl">{progress} de 30 dias · {Math.round((progress/30)*100)}%</div>
                 </div>
+
+                {/* CONTEÚDO DO DIA */}
                 <div className="hb">
                   <div className="tc">
                     <div className="tp" style={{color:phaseColor}}>{phaseNow?.emoji} Etapa {phaseNow?.id} – {phaseNow?.name} · Dia {currentDay}</div>
@@ -452,13 +494,13 @@ export default function App() {
                       <div className="mc">{gender==="F"?"🐩 Fêmea":"🐕 Macho"}</div>
                       <div className="mc">{size.split(" ").slice(1).join(" ")}</div>
                     </div>
-                    <button className={`bts ${completedDays.has(currentDay)?"done":""}`} onClick={()=>openDay(currentDay)}>
-                      {completedDays.has(currentDay) ? "✅ Treino concluído!" : `▶ Treinar com ${_a} ${dogName} hoje`}
-                    </button>
                   </div>
 
-                  {/* CARROSSEL COM SETAS */}
-                  <div style={{marginBottom:20}}>
+                  {/* ANÚNCIO — integrado como card */}
+                  <AdBanner/>
+
+                  {/* CARROSSEL DE ETAPAS */}
+                  <div style={{marginBottom:0}}>
                     <div className="st">Etapas do programa</div>
                     <div className="pr-outer">
                       <button className="pr-arrow left" onClick={()=>scrollCarousel(-1)}>‹</button>
@@ -478,8 +520,10 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* ANÚNCIO GOOGLE ADSENSE */}
-                  <AdBanner/>
+                  {/* BOTÃO TREINAR — abaixo das etapas */}
+                  <button className={`bts ${completedDays.has(currentDay)?"done":""}`} onClick={()=>openDay(currentDay)}>
+                    {completedDays.has(currentDay) ? "✅ Treino concluído!" : `▶ Treinar com ${_a} ${dogName} hoje`}
+                  </button>
                 </div>
               </div>
             )}
@@ -551,33 +595,59 @@ export default function App() {
             {nav === "diploma" && (
               <div className="dipw">
                 {progress < 30 ? (
-                  <div className="clk">
-                    <span className="clki">🔒</span>
-                    <h3>Diploma ainda não disponível</h3>
-                    <p>O diploma {_do} <strong>{dogName}</strong> será liberado após a conclusão dos 30 dias. Continue com carinho e consistência!</p>
-                    <div className="cpb">{progress}/30</div>
-                    <div className="cpl">dias concluídos</div>
-                    <div style={{margin:"14px 0 0"}}>
-                      <div className="obw" style={{background:"#F0E0D0",height:9}}>
-                        <div style={{height:"100%",borderRadius:50,background:"linear-gradient(90deg,#8B5E3C,#C8956A)",width:`${(progress/30)*100}%`,transition:"width .6s"}}/>
+                  <>
+                    <div className="clk">
+                      <span className="clki">🔒</span>
+                      <h3>Diploma ainda não disponível</h3>
+                      <p>O diploma {_do} <strong>{dogName}</strong> será liberado após a conclusão dos 30 dias. Continue com carinho e consistência!</p>
+                      <div className="cpb">{progress}/30</div>
+                      <div className="cpl">dias concluídos</div>
+                      <div style={{margin:"14px 0 0"}}>
+                        <div className="obw" style={{background:"#F0E0D0",height:9}}>
+                          <div style={{height:"100%",borderRadius:50,background:"linear-gradient(90deg,#8B5E3C,#C8956A)",width:`${(progress/30)*100}%`,transition:"width .6s"}}/>
+                        </div>
+                        <div style={{fontSize:11,color:"var(--soft)",marginTop:5,fontWeight:700}}>{Math.round((progress/30)*100)}% completo</div>
                       </div>
-                      <div style={{fontSize:11,color:"var(--soft)",marginTop:5,fontWeight:700}}>{Math.round((progress/30)*100)}% completo</div>
+                      <button className="btnp" style={{marginTop:20}} onClick={()=>setNav("home")}>Continuar treinando 🐾</button>
                     </div>
-                    <button className="btnp" style={{marginTop:20}} onClick={()=>setNav("home")}>Continuar treinando 🐾</button>
-                  </div>
+
+                    {/* CTA E-BOOK para quem ainda não terminou */}
+                    <div className="lead-card" style={{marginTop:16}}>
+                      <span className="icon">📘</span>
+                      <h3>Quer ir mais fundo?</h3>
+                      <p>Baixe gratuitamente o e-book <strong style={{color:'#FFD54F'}}>"Cachorro Obediente, Dono Feliz"</strong> e aprofunde cada técnica do programa.</p>
+                      <a className="lead-btn" href="https://catioros.com.br/e-book-adestramento/" target="_blank" rel="noopener noreferrer">
+                        📥 Baixar e-book grátis
+                      </a>
+                      <div className="lead-note">Gratuito · Sem spam · Só conteúdo de qualidade</div>
+                    </div>
+                  </>
                 ) : (
-                  <div className="cert">
-                    <img src="/logo.png" className="cert-logo" alt="Catioros"/>
-                    <div className="cav">{dogPhoto?<img src={dogPhoto} alt={dogName}/>:"🐶"}</div>
-                    <span className="cmd">🏅</span>
-                    <div className="ctl">Certificado de Conclusão</div>
-                    <div className="cst">Este certificado confirma que {_a} cão</div>
-                    <span className="cdn">{dogName}</span>
-                    <div className="cst">completou com sucesso o programa<br/><strong>30 Dias para um Cachorro Obediente</strong><br/>sob orientação de um tutor dedicado.</div>
-                    <div className="cdt">🗓 {new Date().toLocaleDateString("pt-BR",{day:"numeric",month:"long",year:"numeric"})}</div>
-                    <div className="cbg">🐾 Cachorro Obediente, Dono Feliz</div>
-                    <div className="cert-url">catioros.com.br</div>
-                  </div>
+                  <>
+                    <div className="cert">
+                      <img src="/logo.png" className="cert-logo" alt="Catioros"/>
+                      <div className="cav">{dogPhoto?<img src={dogPhoto} alt={dogName}/>:"🐶"}</div>
+                      <span className="cmd">🏅</span>
+                      <div className="ctl">Certificado de Conclusão</div>
+                      <div className="cst">Este certificado confirma que {_a} cão</div>
+                      <span className="cdn">{dogName}</span>
+                      <div className="cst">completou com sucesso o programa<br/><strong>30 Dias para um Cachorro Obediente</strong><br/>sob orientação de um tutor dedicado.</div>
+                      <div className="cdt">🗓 {new Date().toLocaleDateString("pt-BR",{day:"numeric",month:"long",year:"numeric"})}</div>
+                      <div className="cbg">🐾 Cachorro Obediente, Dono Feliz</div>
+                      <div className="cert-url">catioros.com.br</div>
+                    </div>
+
+                    {/* CTA E-BOOK para quem terminou */}
+                    <div className="lead-card">
+                      <span className="icon">🎁</span>
+                      <h3>Parabéns! Seu presente está aqui</h3>
+                      <p>Você concluiu o programa! Agora aprofunde ainda mais com o e-book completo <strong style={{color:'#FFD54F'}}>"Cachorro Obediente, Dono Feliz"</strong> — exclusivo para formandos.</p>
+                      <a className="lead-btn" href="https://catioros.com.br/e-book-adestramento/" target="_blank" rel="noopener noreferrer">
+                        📥 Quero meu e-book grátis
+                      </a>
+                      <div className="lead-note">Gratuito · Conteúdo exclusivo para quem completou os 30 dias</div>
+                    </div>
+                  </>
                 )}
               </div>
             )}
@@ -593,6 +663,7 @@ export default function App() {
           </>
         )}
 
+        {/* ── DAY DETAIL ── */}
         {screen === "day" && (
           <div className="dd">
             <div className="dh">
@@ -629,6 +700,7 @@ export default function App() {
           </div>
         )}
       </div>
+      <Analytics/>
     </>
   );
 }
