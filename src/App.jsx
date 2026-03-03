@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 
-// ── STORAGE ───────────────────────────────────────────────────────────────────
 const STORAGE_KEY = "cachorro_obediente_v1";
 function loadState() {
   try { const r = localStorage.getItem(STORAGE_KEY); return r ? JSON.parse(r) : null; }
@@ -10,11 +9,9 @@ function saveState(s) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch {}
 }
 
-// ── GRAMMAR ───────────────────────────────────────────────────────────────────
 const doG = g => g === "F" ? "da" : "do";
 const aG  = g => g === "F" ? "a"  : "o";
 
-// ── DATA ──────────────────────────────────────────────────────────────────────
 const PHASES = [
   { id:1, name:"Fundamentos",            color:"#4CAF50", emoji:"🌱", days:[1,2,3,4,5,6,7] },
   { id:2, name:"Comandos Essenciais",    color:"#FF9800", emoji:"⭐", days:[8,9,10,11,12,13,14,15] },
@@ -23,47 +20,68 @@ const PHASES = [
 ];
 
 const DAYS = {
-  1:  { theme:"Liderança Calma",              phase:1, intro:"Seu cachorro precisa saber que você guia a rotina. Cães se sentem seguros quando há um líder claro e gentil.", tip:"Liderança não é dominação – é consistência e calma.", exercise:"Antes da refeição, peça que sente e espere 5 segundos.", steps:["Segure o pote na altura do peito","Diga 'Senta' com voz firme e calma","Espere sentar – não repita o comando","Conte 5 segundos em silêncio","Coloque o pote e diga 'Pode'"], duration:"10 min", icon:"👑" },
-  2:  { theme:"Construindo Confiança",         phase:1, intro:"A confiança é a base de tudo. Hoje vamos criar um momento especial de conexão.", tip:"Seu cachorro aprende a confiar em você observando cada movimento seu.", exercise:"5 minutos de carinho consciente — sem celular.", steps:["Sente no chão ao nível do cachorro","Ofereça a mão para farejar primeiro","Faça carinho suave nas costas e pescoço","Fale com voz tranquila","Observe: relaxado ou tenso?"], duration:"10 min", icon:"🤝" },
-  3:  { theme:"Rotina de Alimentação",         phase:1, intro:"Horários fixos de refeição ensinam paciência e reforçam sua liderança.", tip:"Cães com rotina previsível ficam menos ansiosos e mais obedientes.", exercise:"Defina horários fixos de alimentação e pratique o aguardo.", steps:["Defina dois horários fixos (ex: 7h e 19h)","Peça 'Senta' antes de cada refeição","Pratique aguardo de 5 a 10 segundos","Sempre diga 'Pode' para liberar","Mantenha consistência todos os dias"], duration:"10 min", icon:"🍽️" },
-  4:  { theme:"Memória & Associação",          phase:1, intro:"Seu cachorro aprende por associação. Experiências positivas criam memórias duradouras.", tip:"Recompense imediatamente — a janela é de apenas 2 segundos.", exercise:"5 sequências de ação + petisco + elogio verbal.", steps:["Pegue 5 petiscos pequenos","Peça qualquer comportamento simples","Diga 'Muito bem!' com entusiasmo","Ofereça o petisco imediatamente","Repita 5 vezes com ações diferentes"], duration:"10 min", icon:"🧠" },
-  5:  { theme:"Limites da Casa",               phase:1, intro:"Limites claros dão segurança ao seu cão. Ele precisa saber o que pode e o que não pode.", tip:"Consistência é tudo. Decida as regras e mantenha sempre.", exercise:"Defina 2 regras claras e pratique uma delas hoje.", steps:["Escolha: pode subir no sofá? pode entrar no quarto?","Decida e anote as regras","Pratique: se não pode subir, redirecione gentilmente","Use 'Não' com voz firme (não gritando)","Recompense quando obedecer"], duration:"10 min", icon:"🏠" },
-  6:  { theme:"Leitura de Sinais",             phase:1, intro:"Cães se comunicam com o corpo. Aprender a ler os sinais transforma o relacionamento.", tip:"Cauda baixa = medo. Cauda alta rígida = alerta. Balançando = felicidade.", exercise:"Observe seu cão por 5 minutos e anote 3 comportamentos.", steps:["Sente em silêncio e observe sem interagir","Note posição da cauda, orelhas e postura","Anote o que fez e em qual contexto","Identifique: feliz, ansioso ou curioso?","Compartilhe com a família"], duration:"10 min", icon:"👀" },
-  7:  { theme:"Revisão da Semana 1",           phase:1, intro:"Primeira semana concluída! Hoje revisamos tudo que foi aprendido.", tip:"O progresso é cumulativo. Cada dia conta.", exercise:"Pratique todas as habilidades da semana em 10 minutos.", steps:["Refeição com 'Senta' e aguardo","Sessão de carinho de 2 minutos","5 repetições de ação + recompensa","Teste uma regra da casa","Celebre com brincadeira especial!"], duration:"10 min", icon:"🏆" },
-  8:  { theme:"Comando: SENTA",                phase:2, intro:"O 'Senta' é o mais importante. É a base para todos os outros comandos.", tip:"Nunca force fisicamente. Use o petisco para guiar o movimento.", exercise:"10 repetições do 'Senta' com reforço positivo.", steps:["Segure petisco na altura do nariz","Mova para cima e atrás da cabeça","Quando o traseiro tocar o chão, diga 'Senta!'","Recompense imediatamente","Repita 10 vezes, reduzindo o petisco"], duration:"10 min", icon:"⬇️" },
-  9:  { theme:"Comando: FICA",                 phase:2, intro:"O 'Fica' ensina autocontrole. Comece com segundos e aumente gradualmente.", tip:"Se quebrar o 'fica', não recompense. Recomece sem punição.", exercise:"Pratique 'Senta' + 'Fica' com distância crescente.", steps:["Peça 'Senta'","Mostre a palma da mão: 'Fica'","Dê um passo atrás","Volte e recompense após 3 segundos","Aumente para 5, 10 segundos"], duration:"10 min", icon:"✋" },
-  10: { theme:"Comando: VEM",                  phase:2, intro:"O 'Vem' pode salvar a vida do seu cão. Sempre associe a algo muito positivo.", tip:"Nunca chame com 'Vem' e faça algo que não gosta. Mantenha positivo.", exercise:"Pratique 'Vem' em distâncias curtas com recompensa exagerada.", steps:["Coloque-se a 2 metros","Agache, abra os braços e diga 'Vem!' animado","Quando chegar, festeje MUITO","Aumente a distância gradualmente","Pratique em cômodos diferentes"], duration:"10 min", icon:"📣" },
-  11: { theme:"Comando: DEITA",                phase:2, intro:"O 'Deita' aprofunda o autocontrole e requer mais confiança.", tip:"Não force. Guie com petisco em direção ao chão em forma de 'L'.", exercise:"10 repetições de 'Senta' seguido de 'Deita'.", steps:["Peça 'Senta' primeiro","Segure petisco no nariz e mova ao chão","Quando deitar, diga 'Deita!' e recompense","Se resistir, pratique em superfície macia","Combine: Senta → Deita → Fica"], duration:"10 min", icon:"🛏️" },
-  12: { theme:"Comando: NÃO",                  phase:2, intro:"O 'Não' interrompe comportamentos indesejados. Claro, mas nunca agressivo.", tip:"Diga 'Não' uma vez com voz firme. Repetir muitas vezes perde o efeito.", exercise:"Pratique interromper um comportamento e redirecionar.", steps:["Identifique um comportamento indesejado","Quando iniciar, diga 'Não' uma vez","Redirecione para outro comportamento","Recompense o comportamento alternativo","Nunca recompense logo após o 'Não'"], duration:"10 min", icon:"🚫" },
-  13: { theme:"Andar sem Puxar",               phase:2, intro:"Puxar a guia é frustrantíssimo. A solução: simplesmente parar.", tip:"Seu cachorro aprende que puxar não leva a lugar nenhum.", exercise:"Passeio de 10 minutos praticando a técnica da parada.", steps:["Comece a caminhar com a guia","Assim que puxar, PARE completamente","Aguarde voltar ao seu lado","Continue quando a guia estiver folgada","Recompense cada vez que andar ao lado"], duration:"10 min", icon:"🦮" },
-  14: { theme:"Comando: SILÊNCIO",             phase:2, intro:"O segredo para latidos: recompensar o silêncio, não punir o latido.", tip:"Gritar 'Para!' aumenta o estresse. Calma transmite calma.", exercise:"Pratique 'Silêncio' em situação controlada.", steps:["Identifique o gatilho do latido","Quando latir, diga 'Silêncio' com voz calma","Aguarde o primeiro segundo de silêncio","Recompense imediatamente","Repita 5–8 vezes na sessão"], duration:"10 min", icon:"🤫" },
-  15: { theme:"Revisão de Comandos",           phase:2, intro:"6 comandos ensinados! Hoje fazemos uma revisão geral.", tip:"Revisar comandos já aprendidos é tão importante quanto aprender novos.", exercise:"Pratique todos os 6 comandos em sequência.", steps:["SENTA – 3 repetições","FICA – 10 segundos de distância","VEM – de outra parte da casa","DEITA – após o senta","NÃO – redirecionar comportamento","SILÊNCIO – se possível"], duration:"10 min", icon:"📋" },
-  16: { theme:"Latidos: Entendendo a Causa",   phase:3, intro:"Todo latido tem uma causa. Entender o porquê é o primeiro passo.", tip:"Cães latem por excitação, medo, tédio ou alerta. Cada causa tem solução.", exercise:"Identifique o padrão de latidos hoje.", steps:["Anote 3 momentos em que latiu","Identifique: medo, excitação, alerta ou tédio?","Note o que aconteceu antes","Note o que fez parar","Use esse conhecimento nas próximas sessões"], duration:"10 min", icon:"🔊" },
-  17: { theme:"Ansiedade de Separação",        phase:3, intro:"Cães ansiosos não são desobedientes – estão com medo. Exposição gradual resolve.", tip:"Saídas e chegadas dramáticas aumentam a ansiedade. Seja discreto.", exercise:"Pratique micro-separações de 1 a 5 minutos.", steps:["Deixe em um cômodo sem drama","Saia por 1 minuto e volte calmamente","Não consolide agitação – aguarde acalmar","Aumente: 1, 2, 5 minutos","Recompense calma, não agitação"], duration:"10 min", icon:"😰" },
-  18: { theme:"Destruição de Objetos",         phase:3, intro:"Mastigar é instintivo. O problema não é mastigar – é o que mastiga.", tip:"Mais exercício = menos destruição. Cães destroem por tédio e ansiedade.", exercise:"Redirecione o instinto de mastigar para brinquedos.", steps:["Separe 2–3 brinquedos de mastigar","Quando mastigar errado, diga 'Não' e ofereça o brinquedo","Quando mastigar o brinquedo, elogie muito","Aumente o exercício físico diário","Guarde objetos valiosos fora do alcance"], duration:"10 min", icon:"🦴" },
-  19: { theme:"Pular nas Pessoas",             phase:3, intro:"Cães pulam por excitação. Solução: não dar atenção quando pula.", tip:"Virar as costas é mais eficaz do que empurrar.", exercise:"Pratique ignorar o pulo com 3 pessoas diferentes.", steps:["Quando pular, vire as costas completamente","Cruce os braços e olhe para cima","Aguarde as 4 patas no chão","Recompense imediatamente com atenção","Peça que visitantes façam o mesmo"], duration:"10 min", icon:"🙅" },
-  20: { theme:"Ciúmes e Novos Membros",        phase:3, intro:"Quando algo novo chega, seu cão pode sentir que perdeu seu lugar.", tip:"Mantenha a rotina estável. Ele precisa saber que seu lugar é seguro.", exercise:"Pratique interações supervisionadas com o elemento novo.", steps:["Mantenha atenção e carinho ao cão","Apresente novidades de forma gradual","Recompense comportamentos calmos","Nunca force interação","Sempre termine em algo positivo"], duration:"10 min", icon:"💚" },
-  21: { theme:"Medo de Barulhos",              phase:3, intro:"Trovões, fogos, aspirador: sons assustam. Dessensibilização gradual funciona.", tip:"Não console excessivamente – pode reforçar o medo. Aja com normalidade.", exercise:"Pratique exposição gradual a um som que assusta.", steps:["Identifique o som que mais assusta","Reproduza em volume muito baixo com petiscos","Aumente o volume gradualmente","Mantenha comportamento neutro e calmo","Se reagir muito, diminua o volume"], duration:"10 min", icon:"⚡" },
-  22: { theme:"Comportamento com Crianças",    phase:3, intro:"Cães e crianças podem ser melhores amigos com orientação adequada.", tip:"Ensine as crianças também: não correr na frente, não incomodar na hora de comer.", exercise:"Pratique interação supervisionada criança-cão.", steps:["Ensine a criança a oferecer petisco com mão aberta","Peça 'Senta' antes da interação","Deixe farejar no próprio ritmo","Recompense comportamentos calmos","Encerre antes de qualquer agitação"], duration:"10 min", icon:"👶" },
-  23: { theme:"Revisão de Comportamentos",     phase:3, intro:"Metade final! Hoje avaliamos o progresso nos comportamentos desafiadores.", tip:"Uma melhora de 30% já é uma vitória. Progresso não precisa ser perfeito.", exercise:"Teste um comportamento problemático da semana 1.", steps:["Lembre o maior desafio do início","Pratique a técnica aprendida","Anote uma melhoria percebida","Recompense muito qualquer progresso","Defina objetivo para a última semana"], duration:"10 min", icon:"📊" },
-  24: { theme:"Jogos Mentais",                 phase:4, intro:"Estimulação mental cansa tanto quanto a física. Cão estimulado é cão equilibrado.", tip:"15 min de estimulação mental = 30 min de exercício físico em efeito calmante.", exercise:"Crie um caça ao tesouro com petiscos pela casa.", steps:["Mostre o petisco e esconda em 3 locais fáceis","Diga 'Procura!' e observe cheirar","Aumente a dificuldade gradualmente","Use um Kong recheado como desafio extra","Celebre cada descoberta com entusiasmo"], duration:"10 min", icon:"🧩" },
-  25: { theme:"Caminhada Estruturada",         phase:4, intro:"Uma boa caminhada não é só exercício – é aprendizado e vínculo.", tip:"Permita que cheire por 30% do tempo. Cheirar é o 'Instagram' dele.", exercise:"Caminhada de 20 min com prática de comandos.", steps:["Inicie com 'Senta' antes da guia","A cada 5 min, pratique um comando","Permita tempo livre para cheirar","Pratique 'Vem' quando ficar para trás","Termine com elogio e brincadeira"], duration:"20 min", icon:"🌳" },
-  26: { theme:"Truques Divertidos",            phase:4, intro:"Truques fortalecem o vínculo. Hoje: dá a patinha!", tip:"Truques são treinamento disfarçado de brincadeira.", exercise:"Ensine 'Dá a patinha' em 10 minutos.", steps:["Peça 'Senta'","Segure petisco no punho fechado","Aguarde usar a pata para investigar","Quando tocar o punho, abra e dê o petisco","Adicione o comando 'Patinha'"], duration:"10 min", icon:"🐾" },
-  27: { theme:"Reforço Espontâneo",            phase:4, intro:"Surpreender com recompensas por bom comportamento espontâneo é muito poderoso.", tip:"Recompensas imprevisíveis são mais motivadoras que as previstas.", exercise:"Surpreenda com 5 recompensas por comportamentos não pedidos.", steps:["Observe ao longo do dia","Viu comportamento positivo? Recompense na hora","Ex: ficou quieto quando alguém chegou → petisco","Ex: pegou brinquedo em vez do sapato → elogio exagerado","Anote o que recompensou"], duration:"10 min", icon:"🎁" },
-  28: { theme:"Socialização Controlada",       phase:4, intro:"Encontros positivos com outros cães fortalecem a confiança social.", tip:"Nunca force interação. Deixe o cão escolher aproximar.", exercise:"Aproveite um encontro com outro cão ou pessoa nova.", steps:["Encontre em espaço neutro","Deixe cheirarem em guia folgada","Observe sinais de conforto ou estresse","Se estressado, aumente a distância","Termine sempre em experiência positiva"], duration:"15 min", icon:"🤝" },
-  29: { theme:"Preparando o Diploma",          phase:4, intro:"Amanhã é o grande dia! Revisão completa de tudo que foi aprendido.", tip:"Compare com o Dia 1. A transformação é real, mesmo que gradual.", exercise:"Sessão completa com todos os comandos.", steps:["Senta, Fica, Vem, Deita, Não, Silêncio","Andar sem puxar por 5 minutos","Um truque (patinha ou outro)","Recompense generosamente","Tire uma foto para registrar!"], duration:"15 min", icon:"📸" },
-  30: { theme:"🎉 Dia da Formatura!",          phase:4, intro:"Você fez isso! 30 dias de dedicação, amor e paciência. Vocês são parceiros!", tip:"Continue praticando diariamente, mesmo que por 5 minutos.", exercise:"Sessão especial de celebração!", steps:["Sessão dos comandos preferidos","Brincadeira especial – o que mais ama?","Caminhada em local novo","Foto oficial do formando 🐶","Compartilhe com alguém especial"], duration:"20 min", icon:"🎓" },
+  1:  { theme:"Liderança Calma", phase:1, intro:"Seu cachorro precisa saber que você guia a rotina. Cães se sentem seguros quando há um líder claro e gentil.", tip:"Liderança não é dominação – é consistência e calma.", exercise:"Antes da refeição, peça que sente e espere 5 segundos.", steps:["Segure o pote na altura do peito","Diga 'Senta' com voz firme e calma","Espere sentar – não repita o comando","Conte 5 segundos em silêncio","Coloque o pote e diga 'Pode'"], duration:"10 min", icon:"👑" },
+  2:  { theme:"Construindo Confiança", phase:1, intro:"A confiança é a base de tudo. Hoje vamos criar um momento especial de conexão.", tip:"Seu cachorro aprende a confiar em você observando cada movimento seu.", exercise:"5 minutos de carinho consciente — sem celular.", steps:["Sente no chão ao nível do cachorro","Ofereça a mão para farejar primeiro","Faça carinho suave nas costas e pescoço","Fale com voz tranquila","Observe: relaxado ou tenso?"], duration:"10 min", icon:"🤝" },
+  3:  { theme:"Rotina de Alimentação", phase:1, intro:"Horários fixos de refeição ensinam paciência e reforçam sua liderança.", tip:"Cães com rotina previsível ficam menos ansiosos e mais obedientes.", exercise:"Defina horários fixos de alimentação e pratique o aguardo.", steps:["Defina dois horários fixos (ex: 7h e 19h)","Peça 'Senta' antes de cada refeição","Pratique aguardo de 5 a 10 segundos","Sempre diga 'Pode' para liberar","Mantenha consistência todos os dias"], duration:"10 min", icon:"🍽️" },
+  4:  { theme:"Memória & Associação", phase:1, intro:"Seu cachorro aprende por associação. Experiências positivas criam memórias duradouras.", tip:"Recompense imediatamente — a janela é de apenas 2 segundos.", exercise:"5 sequências de ação + petisco + elogio verbal.", steps:["Pegue 5 petiscos pequenos","Peça qualquer comportamento simples","Diga 'Muito bem!' com entusiasmo","Ofereça o petisco imediatamente","Repita 5 vezes com ações diferentes"], duration:"10 min", icon:"🧠" },
+  5:  { theme:"Limites da Casa", phase:1, intro:"Limites claros dão segurança ao seu cão. Ele precisa saber o que pode e o que não pode.", tip:"Consistência é tudo. Decida as regras e mantenha sempre.", exercise:"Defina 2 regras claras e pratique uma delas hoje.", steps:["Escolha: pode subir no sofá? pode entrar no quarto?","Decida e anote as regras","Pratique: se não pode subir, redirecione gentilmente","Use 'Não' com voz firme (não gritando)","Recompense quando obedecer"], duration:"10 min", icon:"🏠" },
+  6:  { theme:"Leitura de Sinais", phase:1, intro:"Cães se comunicam com o corpo. Aprender a ler os sinais transforma o relacionamento.", tip:"Cauda baixa = medo. Cauda alta rígida = alerta. Balançando = felicidade.", exercise:"Observe seu cão por 5 minutos e anote 3 comportamentos.", steps:["Sente em silêncio e observe sem interagir","Note posição da cauda, orelhas e postura","Anote o que fez e em qual contexto","Identifique: feliz, ansioso ou curioso?","Compartilhe com a família"], duration:"10 min", icon:"👀" },
+  7:  { theme:"Revisão da Semana 1", phase:1, intro:"Primeira semana concluída! Hoje revisamos tudo que foi aprendido.", tip:"O progresso é cumulativo. Cada dia conta.", exercise:"Pratique todas as habilidades da semana em 10 minutos.", steps:["Refeição com 'Senta' e aguardo","Sessão de carinho de 2 minutos","5 repetições de ação + recompensa","Teste uma regra da casa","Celebre com brincadeira especial!"], duration:"10 min", icon:"🏆" },
+  8:  { theme:"Comando: SENTA", phase:2, intro:"O 'Senta' é o mais importante. É a base para todos os outros comandos.", tip:"Nunca force fisicamente. Use o petisco para guiar o movimento.", exercise:"10 repetições do 'Senta' com reforço positivo.", steps:["Segure petisco na altura do nariz","Mova para cima e atrás da cabeça","Quando o traseiro tocar o chão, diga 'Senta!'","Recompense imediatamente","Repita 10 vezes, reduzindo o petisco"], duration:"10 min", icon:"⬇️" },
+  9:  { theme:"Comando: FICA", phase:2, intro:"O 'Fica' ensina autocontrole. Comece com segundos e aumente gradualmente.", tip:"Se quebrar o 'fica', não recompense. Recomece sem punição.", exercise:"Pratique 'Senta' + 'Fica' com distância crescente.", steps:["Peça 'Senta'","Mostre a palma da mão: 'Fica'","Dê um passo atrás","Volte e recompense após 3 segundos","Aumente para 5, 10 segundos"], duration:"10 min", icon:"✋" },
+  10: { theme:"Comando: VEM", phase:2, intro:"O 'Vem' pode salvar a vida do seu cão. Sempre associe a algo muito positivo.", tip:"Nunca chame com 'Vem' e faça algo que não gosta. Mantenha positivo.", exercise:"Pratique 'Vem' em distâncias curtas com recompensa exagerada.", steps:["Coloque-se a 2 metros","Agache, abra os braços e diga 'Vem!' animado","Quando chegar, festeje MUITO","Aumente a distância gradualmente","Pratique em cômodos diferentes"], duration:"10 min", icon:"📣" },
+  11: { theme:"Comando: DEITA", phase:2, intro:"O 'Deita' aprofunda o autocontrole e requer mais confiança.", tip:"Não force. Guie com petisco em direção ao chão em forma de 'L'.", exercise:"10 repetições de 'Senta' seguido de 'Deita'.", steps:["Peça 'Senta' primeiro","Segure petisco no nariz e mova ao chão","Quando deitar, diga 'Deita!' e recompense","Se resistir, pratique em superfície macia","Combine: Senta → Deita → Fica"], duration:"10 min", icon:"🛏️" },
+  12: { theme:"Comando: NÃO", phase:2, intro:"O 'Não' interrompe comportamentos indesejados. Claro, mas nunca agressivo.", tip:"Diga 'Não' uma vez com voz firme. Repetir muitas vezes perde o efeito.", exercise:"Pratique interromper um comportamento e redirecionar.", steps:["Identifique um comportamento indesejado","Quando iniciar, diga 'Não' uma vez","Redirecione para outro comportamento","Recompense o comportamento alternativo","Nunca recompense logo após o 'Não'"], duration:"10 min", icon:"🚫" },
+  13: { theme:"Andar sem Puxar", phase:2, intro:"Puxar a guia é frustrantíssimo. A solução: simplesmente parar.", tip:"Seu cachorro aprende que puxar não leva a lugar nenhum.", exercise:"Passeio de 10 minutos praticando a técnica da parada.", steps:["Comece a caminhar com a guia","Assim que puxar, PARE completamente","Aguarde voltar ao seu lado","Continue quando a guia estiver folgada","Recompense cada vez que andar ao lado"], duration:"10 min", icon:"🦮" },
+  14: { theme:"Comando: SILÊNCIO", phase:2, intro:"O segredo para latidos: recompensar o silêncio, não punir o latido.", tip:"Gritar 'Para!' aumenta o estresse. Calma transmite calma.", exercise:"Pratique 'Silêncio' em situação controlada.", steps:["Identifique o gatilho do latido","Quando latir, diga 'Silêncio' com voz calma","Aguarde o primeiro segundo de silêncio","Recompense imediatamente","Repita 5–8 vezes na sessão"], duration:"10 min", icon:"🤫" },
+  15: { theme:"Revisão de Comandos", phase:2, intro:"6 comandos ensinados! Hoje fazemos uma revisão geral.", tip:"Revisar comandos já aprendidos é tão importante quanto aprender novos.", exercise:"Pratique todos os 6 comandos em sequência.", steps:["SENTA – 3 repetições","FICA – 10 segundos de distância","VEM – de outra parte da casa","DEITA – após o senta","NÃO – redirecionar comportamento","SILÊNCIO – se possível"], duration:"10 min", icon:"📋" },
+  16: { theme:"Latidos: Entendendo a Causa", phase:3, intro:"Todo latido tem uma causa. Entender o porquê é o primeiro passo.", tip:"Cães latem por excitação, medo, tédio ou alerta. Cada causa tem solução.", exercise:"Identifique o padrão de latidos hoje.", steps:["Anote 3 momentos em que latiu","Identifique: medo, excitação, alerta ou tédio?","Note o que aconteceu antes","Note o que fez parar","Use esse conhecimento nas próximas sessões"], duration:"10 min", icon:"🔊" },
+  17: { theme:"Ansiedade de Separação", phase:3, intro:"Cães ansiosos não são desobedientes – estão com medo. Exposição gradual resolve.", tip:"Saídas e chegadas dramáticas aumentam a ansiedade. Seja discreto.", exercise:"Pratique micro-separações de 1 a 5 minutos.", steps:["Deixe em um cômodo sem drama","Saia por 1 minuto e volte calmamente","Não consolide agitação – aguarde acalmar","Aumente: 1, 2, 5 minutos","Recompense calma, não agitação"], duration:"10 min", icon:"😰" },
+  18: { theme:"Destruição de Objetos", phase:3, intro:"Mastigar é instintivo. O problema não é mastigar – é o que mastiga.", tip:"Mais exercício = menos destruição. Cães destroem por tédio e ansiedade.", exercise:"Redirecione o instinto de mastigar para brinquedos.", steps:["Separe 2–3 brinquedos de mastigar","Quando mastigar errado, diga 'Não' e ofereça o brinquedo","Quando mastigar o brinquedo, elogie muito","Aumente o exercício físico diário","Guarde objetos valiosos fora do alcance"], duration:"10 min", icon:"🦴" },
+  19: { theme:"Pular nas Pessoas", phase:3, intro:"Cães pulam por excitação. Solução: não dar atenção quando pula.", tip:"Virar as costas é mais eficaz do que empurrar.", exercise:"Pratique ignorar o pulo com 3 pessoas diferentes.", steps:["Quando pular, vire as costas completamente","Cruce os braços e olhe para cima","Aguarde as 4 patas no chão","Recompense imediatamente com atenção","Peça que visitantes façam o mesmo"], duration:"10 min", icon:"🙅" },
+  20: { theme:"Ciúmes e Novos Membros", phase:3, intro:"Quando algo novo chega, seu cão pode sentir que perdeu seu lugar.", tip:"Mantenha a rotina estável. Ele precisa saber que seu lugar é seguro.", exercise:"Pratique interações supervisionadas com o elemento novo.", steps:["Mantenha atenção e carinho ao cão","Apresente novidades de forma gradual","Recompense comportamentos calmos","Nunca force interação","Sempre termine em algo positivo"], duration:"10 min", icon:"💚" },
+  21: { theme:"Medo de Barulhos", phase:3, intro:"Trovões, fogos, aspirador: sons assustam. Dessensibilização gradual funciona.", tip:"Não console excessivamente – pode reforçar o medo. Aja com normalidade.", exercise:"Pratique exposição gradual a um som que assusta.", steps:["Identifique o som que mais assusta","Reproduza em volume muito baixo com petiscos","Aumente o volume gradualmente","Mantenha comportamento neutro e calmo","Se reagir muito, diminua o volume"], duration:"10 min", icon:"⚡" },
+  22: { theme:"Comportamento com Crianças", phase:3, intro:"Cães e crianças podem ser melhores amigos com orientação adequada.", tip:"Ensine as crianças também: não correr na frente, não incomodar na hora de comer.", exercise:"Pratique interação supervisionada criança-cão.", steps:["Ensine a criança a oferecer petisco com mão aberta","Peça 'Senta' antes da interação","Deixe farejar no próprio ritmo","Recompense comportamentos calmos","Encerre antes de qualquer agitação"], duration:"10 min", icon:"👶" },
+  23: { theme:"Revisão de Comportamentos", phase:3, intro:"Metade final! Hoje avaliamos o progresso nos comportamentos desafiadores.", tip:"Uma melhora de 30% já é uma vitória. Progresso não precisa ser perfeito.", exercise:"Teste um comportamento problemático da semana 1.", steps:["Lembre o maior desafio do início","Pratique a técnica aprendida","Anote uma melhoria percebida","Recompense muito qualquer progresso","Defina objetivo para a última semana"], duration:"10 min", icon:"📊" },
+  24: { theme:"Jogos Mentais", phase:4, intro:"Estimulação mental cansa tanto quanto a física. Cão estimulado é cão equilibrado.", tip:"15 min de estimulação mental = 30 min de exercício físico em efeito calmante.", exercise:"Crie um caça ao tesouro com petiscos pela casa.", steps:["Mostre o petisco e esconda em 3 locais fáceis","Diga 'Procura!' e observe cheirar","Aumente a dificuldade gradualmente","Use um Kong recheado como desafio extra","Celebre cada descoberta com entusiasmo"], duration:"10 min", icon:"🧩" },
+  25: { theme:"Caminhada Estruturada", phase:4, intro:"Uma boa caminhada não é só exercício – é aprendizado e vínculo.", tip:"Permita que cheire por 30% do tempo. Cheirar é o 'Instagram' dele.", exercise:"Caminhada de 20 min com prática de comandos.", steps:["Inicie com 'Senta' antes da guia","A cada 5 min, pratique um comando","Permita tempo livre para cheirar","Pratique 'Vem' quando ficar para trás","Termine com elogio e brincadeira"], duration:"20 min", icon:"🌳" },
+  26: { theme:"Truques Divertidos", phase:4, intro:"Truques fortalecem o vínculo. Hoje: dá a patinha!", tip:"Truques são treinamento disfarçado de brincadeira.", exercise:"Ensine 'Dá a patinha' em 10 minutos.", steps:["Peça 'Senta'","Segure petisco no punho fechado","Aguarde usar a pata para investigar","Quando tocar o punho, abra e dê o petisco","Adicione o comando 'Patinha'"], duration:"10 min", icon:"🐾" },
+  27: { theme:"Reforço Espontâneo", phase:4, intro:"Surpreender com recompensas por bom comportamento espontâneo é muito poderoso.", tip:"Recompensas imprevisíveis são mais motivadoras que as previstas.", exercise:"Surpreenda com 5 recompensas por comportamentos não pedidos.", steps:["Observe ao longo do dia","Viu comportamento positivo? Recompense na hora","Ex: ficou quieto quando alguém chegou → petisco","Ex: pegou brinquedo em vez do sapato → elogio exagerado","Anote o que recompensou"], duration:"10 min", icon:"🎁" },
+  28: { theme:"Socialização Controlada", phase:4, intro:"Encontros positivos com outros cães fortalecem a confiança social.", tip:"Nunca force interação. Deixe o cão escolher aproximar.", exercise:"Aproveite um encontro com outro cão ou pessoa nova.", steps:["Encontre em espaço neutro","Deixe cheirarem em guia folgada","Observe sinais de conforto ou estresse","Se estressado, aumente a distância","Termine sempre em experiência positiva"], duration:"15 min", icon:"🤝" },
+  29: { theme:"Preparando o Diploma", phase:4, intro:"Amanhã é o grande dia! Revisão completa de tudo que foi aprendido.", tip:"Compare com o Dia 1. A transformação é real, mesmo que gradual.", exercise:"Sessão completa com todos os comandos.", steps:["Senta, Fica, Vem, Deita, Não, Silêncio","Andar sem puxar por 5 minutos","Um truque (patinha ou outro)","Recompense generosamente","Tire uma foto para registrar!"], duration:"15 min", icon:"📸" },
+  30: { theme:"🎉 Dia da Formatura!", phase:4, intro:"Você fez isso! 30 dias de dedicação, amor e paciência. Vocês são parceiros!", tip:"Continue praticando diariamente, mesmo que por 5 minutos.", exercise:"Sessão especial de celebração!", steps:["Sessão dos comandos preferidos","Brincadeira especial – o que mais ama?","Caminhada em local novo","Foto oficial do formando 🐶","Compartilhe com alguém especial"], duration:"20 min", icon:"🎓" },
 };
 
 const CHALLENGES = [
-  { id:"late",   label:"Late demais",       icon:"🔊" },
-  { id:"puxa",   label:"Puxa a guia",       icon:"🦮" },
-  { id:"morde",  label:"Morde móveis",      icon:"🦴" },
-  { id:"ansioso",label:"Ansioso",           icon:"😰" },
-  { id:"basico", label:"Obediência básica", icon:"⭐" },
+  { id:"late",    label:"Late demais",       icon:"🔊" },
+  { id:"puxa",    label:"Puxa a guia",       icon:"🦮" },
+  { id:"morde",   label:"Morde móveis",      icon:"🦴" },
+  { id:"ansioso", label:"Ansioso",           icon:"😰" },
+  { id:"basico",  label:"Obediência básica", icon:"⭐" },
 ];
 
-// ── STYLES ────────────────────────────────────────────────────────────────────
+// ── ADSENSE ───────────────────────────────────────────────────────────────────
+function AdBanner() {
+  const ref = useRef(null);
+  useEffect(() => {
+    try {
+      if (ref.current && ref.current.offsetWidth > 0) {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      }
+    } catch(e) {}
+  }, []);
+  return (
+    <div ref={ref} style={{margin:"0 0 20px",borderRadius:12,overflow:"hidden",minHeight:90}}>
+      <ins className="adsbygoogle"
+        style={{display:"block"}}
+        data-ad-client="ca-pub-8839206023504725"
+        data-ad-slot="1419320305"
+        data-ad-format="auto"
+        data-full-width-responsive="true"/>
+    </div>
+  );
+}
+
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fraunces:ital,wght@0,400;0,700;1,400&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -75,10 +93,20 @@ const css = `
 body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
 .app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--cream);}
 
+/* INSTALL BANNER */
+.install-banner{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:398px;background:#5C3D2E;border-radius:18px;padding:16px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(92,61,46,.35);z-index:200;animation:slideUp .4s ease;}
+@keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(20px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+.install-icon{font-size:32px;flex-shrink:0;}
+.install-text{flex:1;}
+.install-title{color:white;font-size:14px;font-weight:800;margin-bottom:2px;}
+.install-sub{color:rgba(255,255,255,.7);font-size:12px;line-height:1.4;}
+.install-btn{background:#FFD54F;color:#5C3D2E;border:none;border-radius:50px;padding:8px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.install-close{background:none;border:none;color:rgba(255,255,255,.5);font-size:18px;cursor:pointer;padding:4px;flex-shrink:0;line-height:1;}
+
 /* ONBOARD */
 .ob{padding:28px 24px 48px;min-height:100vh;display:flex;flex-direction:column;animation:fu .5s ease;}
 .ob-hd{text-align:center;margin-bottom:24px;}
-.ob-logo{width:130px;margin-bottom:10px;}
+.ob-logo{width:120px;margin-bottom:12px;}
 .ob h1{font-family:'Fraunces',serif;font-size:22px;color:var(--bd);line-height:1.3;}
 .ob p{color:var(--soft);margin-top:6px;font-size:13px;}
 .fs{background:white;border-radius:var(--r);padding:18px;margin-bottom:12px;box-shadow:var(--sh);}
@@ -96,9 +124,9 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);m
 
 /* HOME */
 .home{min-height:100vh;padding-bottom:80px;animation:fu .4s ease;}
-.hh{background:linear-gradient(160deg,#5C3D2E 0%,#8B5E3C 100%);padding:44px 24px 72px;position:relative;overflow:hidden;}
+.hh{background:linear-gradient(160deg,#5C3D2E 0%,#8B5E3C 100%);padding:24px 24px 72px;position:relative;overflow:hidden;}
 .hh::before{content:'🐾';position:absolute;right:-8px;top:8px;font-size:90px;opacity:.07;transform:rotate(15deg);}
-.hh-logo{height:32px;margin-bottom:14px;opacity:.9;}
+.hh-logo{height:28px;margin-bottom:16px;opacity:.9;display:block;}
 .aw{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
 .av{width:50px;height:50px;border-radius:50%;border:3px solid rgba(255,255,255,.35);overflow:hidden;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
 .av img{width:100%;height:100%;object-fit:cover;}
@@ -108,7 +136,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);m
 .pbw{margin-top:12px;background:rgba(255,255,255,.2);border-radius:50px;height:7px;overflow:hidden;}
 .pbf{height:100%;border-radius:50px;background:linear-gradient(90deg,#FFD54F,#FFAB40);transition:width .6s cubic-bezier(.4,0,.2,1);}
 .pl{color:rgba(255,255,255,.75);font-size:11px;margin-top:5px;}
-.hb{padding:22px;margin-top:-40px;}
+.hb{padding:22px;margin-top:-44px;}
 .tc{background:white;border-radius:22px;padding:20px;box-shadow:0 8px 28px rgba(92,61,46,.15);margin-bottom:20px;}
 .tp{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
 .tt{font-family:'Fraunces',serif;font-size:20px;color:var(--bd);margin-bottom:8px;}
@@ -119,9 +147,16 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);m
 .bts:active{transform:scale(.98);}
 .bts.done{background:linear-gradient(135deg,#4CAF50,#66BB6A);}
 .st{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--soft);margin-bottom:10px;}
-.pr{display:flex;gap:9px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+
+/* CARROSSEL COM SETAS */
+.pr-outer{position:relative;margin:0 -4px;}
+.pr-arrow{position:absolute;top:50%;transform:translateY(-55%);width:32px;height:32px;border-radius:50%;background:white;border:2px solid #E8D5C5;box-shadow:0 2px 10px rgba(92,61,46,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;font-weight:900;color:var(--b);z-index:10;transition:all .15s;padding:0;line-height:1;}
+.pr-arrow:hover{background:var(--warm);border-color:var(--bl);transform:translateY(-55%) scale(1.08);}
+.pr-arrow.left{left:-6px;}
+.pr-arrow.right{right:-6px;}
+.pr{display:flex;gap:9px;overflow-x:auto;padding:4px 20px 8px;scrollbar-width:none;scroll-behavior:smooth;}
 .pr::-webkit-scrollbar{display:none;}
-.pc{flex:0 0 auto;background:white;border-radius:14px;padding:12px 14px;box-shadow:0 2px 10px rgba(92,61,46,.08);min-width:100px;cursor:pointer;transition:transform .1s;border:2px solid transparent;}
+.pc{flex:0 0 auto;background:white;border-radius:14px;padding:12px 14px;box-shadow:0 2px 10px rgba(92,61,46,.08);min-width:105px;cursor:pointer;transition:transform .1s;border:2px solid transparent;}
 .pc:active{transform:scale(.96);}
 .pc.on{border-color:var(--bl);}
 .pe{font-size:20px;margin-bottom:4px;}
@@ -226,45 +261,104 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);m
 @keyframes fu{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 `;
 
-// ── APP ───────────────────────────────────────────────────────────────────────
+function InstallBanner() {
+  const [show, setShow] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isIOS, setIsIOS] = useState(false);
+  const [showIOSSteps, setShowIOSSteps] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia('(display-mode: standalone)').matches) return;
+    if (localStorage.getItem('install_dismissed')) return;
+    const ios = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    setIsIOS(ios);
+    if (ios) {
+      setTimeout(() => setShow(true), 3000);
+    } else {
+      const handler = (e) => { e.preventDefault(); setDeferredPrompt(e); setTimeout(() => setShow(true), 3000); };
+      window.addEventListener('beforeinstallprompt', handler);
+      return () => window.removeEventListener('beforeinstallprompt', handler);
+    }
+  }, []);
+
+  const handleInstall = async () => {
+    if (isIOS) { setShowIOSSteps(true); return; }
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') setShow(false);
+    }
+  };
+  const handleDismiss = () => { setShow(false); localStorage.setItem('install_dismissed','1'); };
+  if (!show) return null;
+
+  if (showIOSSteps) return (
+    <div className="install-banner" style={{flexDirection:'column',gap:10}}>
+      <div style={{display:'flex',alignItems:'center',gap:10,width:'100%'}}>
+        <span className="install-icon">📱</span>
+        <div className="install-text"><div className="install-title">Como salvar no iPhone:</div></div>
+        <button className="install-close" onClick={handleDismiss}>✕</button>
+      </div>
+      <div style={{color:'rgba(255,255,255,.9)',fontSize:13,lineHeight:1.7,width:'100%'}}>
+        1. Toque no ícone <strong style={{color:'#FFD54F'}}>compartilhar</strong> (quadrado com seta ↑)<br/>
+        2. Role e toque em <strong style={{color:'#FFD54F'}}>"Adicionar à Tela de Início"</strong><br/>
+        3. Toque em <strong style={{color:'#FFD54F'}}>"Adicionar"</strong>
+      </div>
+      <button className="install-btn" onClick={handleDismiss} style={{width:'100%',padding:10}}>Entendido! ✓</button>
+    </div>
+  );
+
+  return (
+    <div className="install-banner">
+      <span className="install-icon">📲</span>
+      <div className="install-text">
+        <div className="install-title">Salvar na tela inicial</div>
+        <div className="install-sub">Acesse como um app, sem precisar do navegador</div>
+      </div>
+      <button className="install-btn" onClick={handleInstall}>Salvar</button>
+      <button className="install-close" onClick={handleDismiss}>✕</button>
+    </div>
+  );
+}
+
 export default function App() {
   const saved = loadState();
-  const [screen,        setScreen]        = useState(saved ? "main" : "onboard");
-  const [dogName,       setDogName]       = useState(saved?.dogName || "");
-  const [gender,        setGender]        = useState(saved?.gender || "");
-  const [age,           setAge]           = useState(saved?.age || "");
-  const [size,          setSize]          = useState(saved?.size || "");
-  const [challenges,    setChallenges]    = useState(saved?.challenges || []);
-  const [currentDay,    setCurrentDay]    = useState(saved?.currentDay || 1);
-  const [completedDays, setCompletedDays] = useState(new Set(saved?.completedDays || []));
-  const [viewingDay,    setViewingDay]    = useState(1);
-  const [completedSteps,setCompletedSteps]= useState(new Set());
-  const [nav,           setNav]           = useState("home");
-  const [dogPhoto,      setDogPhoto]      = useState(saved?.dogPhoto || null);
-  const photoRef = useRef(null);
+  const [screen,         setScreen]        = useState(saved ? "main" : "onboard");
+  const [dogName,        setDogName]       = useState(saved?.dogName || "");
+  const [gender,         setGender]        = useState(saved?.gender || "");
+  const [age,            setAge]           = useState(saved?.age || "");
+  const [size,           setSize]          = useState(saved?.size || "");
+  const [challenges,     setChallenges]    = useState(saved?.challenges || []);
+  const [currentDay,     setCurrentDay]    = useState(saved?.currentDay || 1);
+  const [completedDays,  setCompletedDays] = useState(new Set(saved?.completedDays || []));
+  const [viewingDay,     setViewingDay]    = useState(1);
+  const [completedSteps, setCompletedSteps]= useState(new Set());
+  const [nav,            setNav]           = useState("home");
+  const [dogPhoto,       setDogPhoto]      = useState(saved?.dogPhoto || null);
+  const photoRef    = useRef(null);
+  const carouselRef = useRef(null);
 
   useEffect(() => {
     if (screen === "onboard") return;
-    saveState({ dogName, gender, age, size, challenges, currentDay, completedDays: [...completedDays], dogPhoto });
+    saveState({ dogName, gender, age, size, challenges, currentDay, completedDays:[...completedDays], dogPhoto });
   }, [dogName, gender, age, size, challenges, currentDay, completedDays, dogPhoto, screen]);
 
   const canStart   = dogName.trim() && gender && age && size && challenges.length > 0;
   const progress   = completedDays.size;
   const phaseNow   = PHASES.find(p => p.days.includes(currentDay));
-  const phaseColor = phaseNow ? { 1:"#4CAF50",2:"#FF9800",3:"#2196F3",4:"#9C27B0" }[phaseNow.id] : "#8B5E3C";
-  const getColor   = id => ({ 1:"#4CAF50",2:"#FF9800",3:"#2196F3",4:"#9C27B0" }[id] || "#8B5E3C");
+  const getColor   = id => ({1:"#4CAF50",2:"#FF9800",3:"#2196F3",4:"#9C27B0"}[id]||"#8B5E3C");
+  const phaseColor = phaseNow ? getColor(phaseNow.id) : "#8B5E3C";
   const _do = doG(gender);
   const _a  = aG(gender);
 
-  const toggleCh  = id => setChallenges(p => p.includes(id) ? p.filter(c=>c!==id) : [...p,id]);
-  const openDay   = d  => { setViewingDay(d); setCompletedSteps(new Set()); setScreen("day"); };
-  const toggleStep= i  => setCompletedSteps(p => { const n=new Set(p); n.has(i)?n.delete(i):n.add(i); return n; });
+  const scrollCarousel = dir => carouselRef.current?.scrollBy({left: dir * 140, behavior:'smooth'});
+  const toggleCh   = id => setChallenges(p => p.includes(id) ? p.filter(c=>c!==id) : [...p,id]);
+  const openDay    = d  => { setViewingDay(d); setCompletedSteps(new Set()); setScreen("day"); };
+  const toggleStep = i  => setCompletedSteps(p => { const n=new Set(p); n.has(i)?n.delete(i):n.add(i); return n; });
 
   const completeDay = () => {
-    const next = new Set(completedDays);
-    next.add(viewingDay);
-    setCompletedDays(next);
-    if (viewingDay === currentDay && currentDay < 30) setCurrentDay(p => p+1);
+    const next = new Set(completedDays); next.add(viewingDay); setCompletedDays(next);
+    if (viewingDay === currentDay && currentDay < 30) setCurrentDay(p=>p+1);
     setScreen("main"); setNav("home");
   };
 
@@ -280,8 +374,8 @@ export default function App() {
     setChallenges([]); setCurrentDay(1); setCompletedDays(new Set()); setDogPhoto(null);
   };
 
-  const Av = ({ sz=50 }) => (
-    <div className="av" style={{ width:sz, height:sz, fontSize:sz*.46 }}>
+  const Av = ({sz=50}) => (
+    <div className="av" style={{width:sz,height:sz,fontSize:sz*.46}}>
       {dogPhoto ? <img src={dogPhoto} alt={dogName}/> : "🐶"}
     </div>
   );
@@ -293,53 +387,37 @@ export default function App() {
     <>
       <style>{css}</style>
       <div className="app">
+        <InstallBanner/>
 
-        {/* ── ONBOARDING ── */}
         {screen === "onboard" && (
           <div className="ob">
             <div className="ob-hd">
-              <img src="/logo.png" className="ob-logo" alt="Catioros" />
+              <img src="/logo.png" className="ob-logo" alt="Catioros"/>
               <h1>30 Dias para um Cachorro Obediente</h1>
               <p>Conta tudo sobre seu cão para personalizar o programa!</p>
             </div>
-
-            <div className="fs">
-              <span className="fl">Nome do cachorro</span>
+            <div className="fs"><span className="fl">Nome do cachorro</span>
               <input className="ti" placeholder="Ex: Thor, Luna, Mel, Chicca..." value={dogName} onChange={e=>setDogName(e.target.value)}/>
             </div>
-            <div className="fs">
-              <span className="fl">Sexo</span>
-              <div className="cg">
-                {[["M","🐕 Macho"],["F","🐩 Fêmea"]].map(([v,l])=>(
-                  <button key={v} className={`ch ${gender===v?"on":""}`} onClick={()=>setGender(v)}>{l}</button>
-                ))}
-              </div>
+            <div className="fs"><span className="fl">Sexo</span>
+              <div className="cg">{[["M","🐕 Macho"],["F","🐩 Fêmea"]].map(([v,l])=>(
+                <button key={v} className={`ch ${gender===v?"on":""}`} onClick={()=>setGender(v)}>{l}</button>
+              ))}</div>
             </div>
-            <div className="fs">
-              <span className="fl">Idade</span>
-              <div className="cg">
-                {["Filhote (até 1 ano)","Adulto (1–7 anos)","Idoso (7+ anos)"].map(a=>(
-                  <button key={a} className={`ch ${age===a?"on":""}`} onClick={()=>setAge(a)}>{a}</button>
-                ))}
-              </div>
+            <div className="fs"><span className="fl">Idade</span>
+              <div className="cg">{["Filhote (até 1 ano)","Adulto (1–7 anos)","Idoso (7+ anos)"].map(a=>(
+                <button key={a} className={`ch ${age===a?"on":""}`} onClick={()=>setAge(a)}>{a}</button>
+              ))}</div>
             </div>
-            <div className="fs">
-              <span className="fl">Porte</span>
-              <div className="cg">
-                {["🐩 Pequeno","🐕 Médio","🦮 Grande"].map(s=>(
-                  <button key={s} className={`ch ${size===s?"on":""}`} onClick={()=>setSize(s)}>{s}</button>
-                ))}
-              </div>
+            <div className="fs"><span className="fl">Porte</span>
+              <div className="cg">{["🐩 Pequeno","🐕 Médio","🦮 Grande"].map(s=>(
+                <button key={s} className={`ch ${size===s?"on":""}`} onClick={()=>setSize(s)}>{s}</button>
+              ))}</div>
             </div>
-            <div className="fs">
-              <span className="fl">Principais desafios (marque todos que se aplicam)</span>
-              <div className="cg">
-                {CHALLENGES.map(c=>(
-                  <button key={c.id} className={`chm ${challenges.includes(c.id)?"on":""}`} onClick={()=>toggleCh(c.id)}>
-                    {c.icon} {c.label}
-                  </button>
-                ))}
-              </div>
+            <div className="fs"><span className="fl">Principais desafios (marque todos que se aplicam)</span>
+              <div className="cg">{CHALLENGES.map(c=>(
+                <button key={c.id} className={`chm ${challenges.includes(c.id)?"on":""}`} onClick={()=>toggleCh(c.id)}>{c.icon} {c.label}</button>
+              ))}</div>
             </div>
             <button className="btnp" disabled={!canStart} onClick={()=>{setScreen("main");setNav("home");}}>
               Começar o programa 🐾
@@ -347,7 +425,6 @@ export default function App() {
           </div>
         )}
 
-        {/* ── MAIN ── */}
         {screen === "main" && (
           <>
             {nav === "home" && (
@@ -379,21 +456,30 @@ export default function App() {
                       {completedDays.has(currentDay) ? "✅ Treino concluído!" : `▶ Treinar com ${_a} ${dogName} hoje`}
                     </button>
                   </div>
+
+                  {/* CARROSSEL COM SETAS */}
                   <div style={{marginBottom:20}}>
                     <div className="st">Etapas do programa</div>
-                    <div className="pr">
-                      {PHASES.map(p=>{
-                        const done=p.days.filter(d=>completedDays.has(d)).length;
-                        return (
-                          <div key={p.id} className={`pc ${phaseNow?.id===p.id?"on":""}`} onClick={()=>setNav("calendar")}>
-                            <div className="pe">{p.emoji}</div>
-                            <div className="pn">{p.name}</div>
-                            <div className="pp" style={{color:getColor(p.id)}}>{done}/{p.days.length}</div>
-                          </div>
-                        );
-                      })}
+                    <div className="pr-outer">
+                      <button className="pr-arrow left" onClick={()=>scrollCarousel(-1)}>‹</button>
+                      <div className="pr" ref={carouselRef}>
+                        {PHASES.map(p => {
+                          const done = p.days.filter(d=>completedDays.has(d)).length;
+                          return (
+                            <div key={p.id} className={`pc ${phaseNow?.id===p.id?"on":""}`} onClick={()=>setNav("calendar")}>
+                              <div className="pe">{p.emoji}</div>
+                              <div className="pn">{p.name}</div>
+                              <div className="pp" style={{color:getColor(p.id)}}>{done}/{p.days.length}</div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <button className="pr-arrow right" onClick={()=>scrollCarousel(1)}>›</button>
                     </div>
                   </div>
+
+                  {/* ANÚNCIO GOOGLE ADSENSE */}
+                  <AdBanner/>
                 </div>
               </div>
             )}
@@ -404,9 +490,9 @@ export default function App() {
                 <p>Progresso {_do} {dogName}</p>
                 <div className="obw"><div className="obf" style={{width:`${(progress/30)*100}%`}}/></div>
                 <div className="ol">{progress} de 30 dias · {Math.round((progress/30)*100)}% concluído</div>
-                {PHASES.map(phase=>{
-                  const done=phase.days.filter(d=>completedDays.has(d)).length;
-                  const pct=Math.round((done/phase.days.length)*100);
+                {PHASES.map(phase => {
+                  const done = phase.days.filter(d=>completedDays.has(d)).length;
+                  const pct  = Math.round((done/phase.days.length)*100);
                   return (
                     <div key={phase.id} className="phs">
                       <div className="phc">
@@ -419,8 +505,7 @@ export default function App() {
                         {phase.days.map(d=>(
                           <div key={d}
                             className={`ddot ${completedDays.has(d)?"comp":""} ${d===currentDay?"tod":""} ${d>currentDay&&!completedDays.has(d)?"lock":""}`}
-                            onClick={()=>(d<=currentDay||completedDays.has(d))&&openDay(d)}
-                          >
+                            onClick={()=>(d<=currentDay||completedDays.has(d))&&openDay(d)}>
                             <div className="ddn">{d}</div>
                             <div className="ddi">{completedDays.has(d)?"✓":d===currentDay?"▶":DAYS[d]?.icon}</div>
                           </div>
@@ -455,7 +540,7 @@ export default function App() {
                   </div>
                 </div>
                 <div className="pcard">
-                  <div className="prow"><span className="pk">Dias concluídos</span><span className="pv" style={{color:"#4CAF50",fontWeight:900}}>{progress} / 30</span></div>
+                  <div className="prow"><span className="pk">Dias concluídos</span><span className="pv" style={{color:"#4CAF50",fontWeight:900}}>{progress}/30</span></div>
                   <div className="prow"><span className="pk">Dia atual</span><span className="pv">Dia {currentDay}</span></div>
                   <div className="prow"><span className="pk">Etapa atual</span><span className="pv">{phaseNow?.emoji} {phaseNow?.name}</span></div>
                 </div>
@@ -469,7 +554,7 @@ export default function App() {
                   <div className="clk">
                     <span className="clki">🔒</span>
                     <h3>Diploma ainda não disponível</h3>
-                    <p>O diploma {_do} <strong>{dogName}</strong> será liberado após a conclusão dos 30 dias. Continue com carinho e consistência — você está quase lá!</p>
+                    <p>O diploma {_do} <strong>{dogName}</strong> será liberado após a conclusão dos 30 dias. Continue com carinho e consistência!</p>
                     <div className="cpb">{progress}/30</div>
                     <div className="cpl">dias concluídos</div>
                     <div style={{margin:"14px 0 0"}}>
@@ -508,7 +593,6 @@ export default function App() {
           </>
         )}
 
-        {/* ── DAY DETAIL ── */}
         {screen === "day" && (
           <div className="dd">
             <div className="dh">
@@ -518,14 +602,8 @@ export default function App() {
               <h1 className="dt">{view.theme}</h1>
             </div>
             <div className="db2">
-              <div className="cd">
-                <div className="ct">🎯 Objetivo de hoje</div>
-                <p className="cx">{view.intro}</p>
-              </div>
-              <div className="cd tip">
-                <div className="ct">💡 Dica importante</div>
-                <p className="cx">{view.tip}</p>
-              </div>
+              <div className="cd"><div className="ct">🎯 Objetivo de hoje</div><p className="cx">{view.intro}</p></div>
+              <div className="cd tip"><div className="ct">💡 Dica importante</div><p className="cx">{view.tip}</p></div>
               <div className="cd">
                 <div className="ct">📝 Exercício do dia</div>
                 <p className="cx" style={{fontWeight:700,marginBottom:14}}>{view.exercise}</p>
@@ -550,7 +628,6 @@ export default function App() {
             </div>
           </div>
         )}
-
       </div>
     </>
   );
